@@ -5,7 +5,7 @@ using WolliesX.Service.Models.v1;
 
 namespace WooliesX.David.Api.Controllers
 {
-    [Route("api/user")]
+    [Route("api/answers")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -13,7 +13,8 @@ namespace WooliesX.David.Api.Controllers
         {
         }
 
-        [HttpGet("")]
+        [HttpGet]
+        [Route("user")]
         public async Task<ActionResult<User>> GetUserAsync()
         {
             return new User();

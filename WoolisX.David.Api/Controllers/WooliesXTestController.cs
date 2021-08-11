@@ -9,29 +9,34 @@ namespace WooliesX.David.Api.Controllers
 {
     [Route("api/answers")]
     [ApiController]
-    public class TechTestController : ControllerBase
+    public class WooliesXTestController : ControllerBase
     {
 
         private readonly IWolliesXService _wolliesXService;
 
-        public TechTestController(IWolliesXService wolliesXService)
+        public WooliesXTestController(IWolliesXService wolliesXService)
         {
             _wolliesXService = wolliesXService;
         }
 
         [HttpGet]
-        public async Task<Result<IEnumerable<Product>>> Sort([FromQuery] string sortOption)
+        [Route("Sort")]
+        public async Task<IEnumerable<Product>> Sort([FromQuery] string sortOption)
         {
             var response = await _wolliesXService.GetSortedProducts(sortOption);
-            return response;
+            if (!response.Success)
+            {
+                return null;
+            }
+            return response.Value;
         }
 
         [HttpPost]
         [Route("TrolleyTotal")]
-        public async Task<Result<double>> GetTrolleyTotalAsync([FromBody] WolliesX.Service.Models.v1.Trolley.Trolley trolley)
+        public async Task<double> GetTrolleyTotalAsync([FromBody] WolliesX.Service.Models.v1.Trolley.Trolley trolley)
         {
             var trolleyTotal = await _wolliesXService.GetTrolleyTotal(trolley);
-            return trolleyTotal;
+            return trolleyTotal.Value;
         }
 
     }

@@ -35,6 +35,13 @@ namespace WolliesX.Service
         
         public async Task<Result<IEnumerable<Product>>> GetSortedProducts(string sortOption)
         {
+            var products = await GetProductsAsync();
+            var result = await SortProductsByOption(sortOption, products);
+            return result;
+
+        }
+        public async Task<List<Product>> GetProductsAsync()
+        {
             var uri = $"{wolliesConfiguration.ServiceEndpoint}/products?token={wolliesConfiguration.Token}";
 
             var httpRequestMessage = new HttpRequestMessage
@@ -45,7 +52,7 @@ namespace WolliesX.Service
                     { "Accept", "application/json" }
                 },
             };
-            
+
             HttpClient client = httpClientFactory.CreateClient($"WolliesX");
 
             try
@@ -53,9 +60,8 @@ namespace WolliesX.Service
                 var response = await client.SendAsync(httpRequestMessage);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var shoppingList = JsonConvert.DeserializeObject<List<Product>>(responseContent);
-                
-                var result = await SortProductsByOption(sortOption, shoppingList);
+                var result = JsonConvert.DeserializeObject<List<Product>>(responseContent);
+
                 return result;
             }
             catch (Exception ex)
@@ -64,8 +70,8 @@ namespace WolliesX.Service
                 Logger.LogError(ex, errorMessage, null);
                 return null;
             }
-
         }
+
 
         private async Task<Result<IEnumerable<Product>>> SortProductsByOption(string sortOption, IEnumerable<Product> products)
         {
@@ -76,7 +82,7 @@ namespace WolliesX.Service
 
             IEnumerable<Product> sortedProducts = Enumerable.Empty<Product>();
 
-            switch (sortOption)
+            switch (sortOption.ToLower())
             {
                 case "low":
                     sortedProducts = products.OrderBy(p => p.Price).ToList();
@@ -126,12 +132,36 @@ namespace WolliesX.Service
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var shoppingList = JsonConvert.DeserializeObject<List<Order>>(responseContent);
 
-                var products = shoppingList.SelectMany(x => x.Products)
-                    .GroupBy(p=>p.Name)
-                    .OrderByDescending(p=>p.Count())
-                    .Select(x => new Product { Name = x.Key, Quantity = 0, Price = x.FirstOrDefault(y=>y.Name == x.Key).Price }).Distinct();
+                //var products = shoppingList.SelectMany(x => x.Products)
+                //    .GroupBy(p=>p.Name)
+                //    .OrderByDescending(p=>p.Count())
+                //    .Select(x => new Product { Name = x.Key, Quantity = 0, Price = x.FirstOrDefault(y=>y.Name == x.Key).Price }).Distinct();
+
                 
-                return products;
+                
+                var products = await this.GetProductsAsync();
+                //var customersHistory = await this.GetCustomersHistoryAsync(userToken);
+
+                var recommendedProducts = shoppingList
+                    .SelectMany(h => h.Products)
+                    .GroupBy(p => p.Name)
+                    .Select(g => new RecommendedProduct
+                    {
+                        Name = g.Key,
+                        CountOnHistory = g.Sum(a => a.Quantity)
+                    })
+                    .OrderBy(pp => pp.CountOnHistory)
+                    .Select(pp => pp.Name)
+                    .ToList();
+
+                var productsOrderedByPopularity = products
+                    .OrderByDescending(p => recommendedProducts.IndexOf(p.Name))
+                    .ToList();
+
+                return productsOrderedByPopularity;
+
+
+                //return products;
             }
             catch (Exception ex)
             {
