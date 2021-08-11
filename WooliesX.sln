@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WolliesX.Service", "Service
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WolliesX.UnitTests", "WolliesX.UnitTests\WolliesX.UnitTests.csproj", "{60B41AC5-C670-434B-BADC-4405DB9C692D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WooliesX.David.Api", "WoolisX.David.Api\WooliesX.David.Api.csproj", "{7C0A16A6-CDBC-421A-BF2C-EB1172CD102C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WooliesX.David.Api", "WooliesX.David.Api\WooliesX.David.Api.csproj", "{7C0A16A6-CDBC-421A-BF2C-EB1172CD102C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
