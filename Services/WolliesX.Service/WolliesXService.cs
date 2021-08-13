@@ -28,11 +28,6 @@ namespace WolliesX.Service
             this.Logger = Logger ?? throw new ArgumentNullException(nameof(Logger));
         }
 
-        public async Task<Result<string>> GetResource() 
-        {
-            return new Result<string>("Hello Worldddddd");
-        }
-        
         public async Task<Result<IEnumerable<Product>>> GetSortedProducts(string sortOption)
         {
             var products = await GetProductsAsync();
@@ -132,15 +127,7 @@ namespace WolliesX.Service
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var shoppingList = JsonConvert.DeserializeObject<List<Order>>(responseContent);
 
-                //var products = shoppingList.SelectMany(x => x.Products)
-                //    .GroupBy(p=>p.Name)
-                //    .OrderByDescending(p=>p.Count())
-                //    .Select(x => new Product { Name = x.Key, Quantity = 0, Price = x.FirstOrDefault(y=>y.Name == x.Key).Price }).Distinct();
-
-                
-                
                 var products = await this.GetProductsAsync();
-                //var customersHistory = await this.GetCustomersHistoryAsync(userToken);
 
                 var recommendedProducts = shoppingList
                     .SelectMany(h => h.Products)
@@ -159,15 +146,11 @@ namespace WolliesX.Service
                     .ToList();
 
                 return productsOrderedByPopularity;
-
-
-                //return products;
             }
             catch (Exception ex)
             {
                 var errorMessage = $"Failed to retrieve data from external api:  {uri}";
                 Logger.LogError(ex, errorMessage, result);
-                //Ideally would be looging into appInsights 
                 return null;
             }
         }
