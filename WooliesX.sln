@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WolliesX.UnitTests", "Wolli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WooliesX.David.Api", "WooliesX.David.Api\WooliesX.David.Api.csproj", "{7C0A16A6-CDBC-421A-BF2C-EB1172CD102C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{46A5CBA5-4CB6-466A-BC94-F3F79A66887E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{00AA72B8-2354-4C25-A9E5-F39BC8F1F4B9} = {46A5CBA5-4CB6-466A-BC94-F3F79A66887E}
 		{5B9F616A-0648-4154-9CA7-117300C9293F} = {00AA72B8-2354-4C25-A9E5-F39BC8F1F4B9}
 		{60B41AC5-C670-434B-BADC-4405DB9C692D} = {8526F75B-4FCD-4894-B478-E42E8BED43F3}
 	EndGlobalSection

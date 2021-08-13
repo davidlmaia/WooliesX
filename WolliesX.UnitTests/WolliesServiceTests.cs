@@ -1,9 +1,13 @@
+using AutoFixture;
+using AutoFixture.AutoMoq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WolliesX.Service;
 using WolliesX.Service.Common;
+using WolliesX.Service.Models;
 using WolliesX.Service.Models.v1;
 using WolliesX.Service.Models.v1.Trolley;
 
@@ -13,6 +17,9 @@ namespace WolliesX.UnitTests
     [TestClass]
     public class WolliesServiceTests 
     {
+        public IFixture Fixture;
+        private readonly Mock<IWolliesXService> _wolliesServiceMoq;
+
         public List<Product> Products1 { get; set; }
         public List<Product> Products2 { get; set; }
         public List<Product> Products3 { get; set; }
@@ -25,9 +32,14 @@ namespace WolliesX.UnitTests
 
         public WolliesServiceTests()
         {
-			#region Test values
+            Fixture = new Fixture().Customize(new AutoMoqCustomization());
+            Fixture.Inject<IWolliesXService>(Fixture.Create<WolliesXService>());
+            
+            _wolliesServiceMoq = new Mock<IWolliesXService>();
 
-			Products1 = new List<Product>
+            #region Test values
+
+            Products1 = new List<Product>
             {
                 new Product{ Name = "ProductB", Price = 10, Quantity = 2 },
                 new Product{ Name = "ProductA", Price = 20, Quantity = 8 },
@@ -98,7 +110,26 @@ namespace WolliesX.UnitTests
 		}
 
 
-		[TestMethod]
+        [TestMethod]
+        public async Task Sort_Should_Return_Correct_Products()
+        {
+            //var sortedProducts = Task.FromResult(new Result<IEnumerable<Product>>(Products1));
+
+            //_wolliesServiceMoq.Setup(m => m.GetSortedProducts(It.IsAny<string>())).Returns(sortedProducts);
+
+            //Fixture.Register(() => _wolliesServiceMoq.Object);
+
+            ////Register services
+            //var wooliesService = new WolliesXService();
+
+            //var test = await _wolliesServiceMoq.GetSortedProducts("high");
+
+            //Assert.AreNotEqual(test.Value, null);
+            //Assert.AreNotEqual(test.Value.FirstOrDefault().Name, "ProductA");
+        }
+
+
+        [TestMethod]
         public void SortByName_Should_Return_Correct_Products()
         {
             var sortedProducts = Products1;

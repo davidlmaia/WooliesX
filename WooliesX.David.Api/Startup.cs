@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.ApplicationInsights;
 using WolliesX.Service;
 
 namespace WoolisX.David.Api
@@ -29,6 +30,13 @@ namespace WoolisX.David.Api
 
             services.AddControllers();
             services.AddHttpClient();
+
+            services.AddLogging(loggingBuilder =>
+            {
+                // Optional: Apply filters to configure LogLevel Trace or above is sent to ApplicationInsights for all categories.
+                loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Trace);
+                loggingBuilder.AddApplicationInsights(this.Configuration["app:insights"]);
+            });
 
             services.Configure<WolliesXConfiguration>(this.Configuration.GetSection("wooliesx"));
 
